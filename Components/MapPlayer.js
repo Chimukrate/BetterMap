@@ -318,17 +318,13 @@ function getPlayerSecrets(uuid, cacheMs, callback) {
         return
     }
 
-    let apiKey = settings.settings.apiKey
-
-    if (!apiKey) return
-    fetch(`https://api.hypixel.net/player?key=${apiKey}&uuid=${uuid}`).json(data => {
-        let secrets = data?.player?.achievements?.skyblock_treasure_hunter || 0
-
-        secretsData.set(uuid, [Date.now(), secrets])
-
-        callback(secretsData.get(uuid)[1])
-    })
+    fetch(`https://api.tenios.dev/secrets/${uuid}`).text((secretsNum) => {
+        let secrets = parseInt(secretsNum);
+        secretsData.set(uuid, [Date.now(), secrets]);
+    
+        callback(secretsData.get(uuid)[1]);
+      });
 }
 
-const markerSelf = new Image("markerSelf.png", "https://i.imgur.com/mwpjgRz.png");
-const markerOther = new Image("markerOther.png", "https://i.imgur.com/xnoBx3p.png");
+const markerSelf = new Image.fromUrl("https://i.imgur.com/mwpjgRz.png");
+const markerOther = new Image.fromUrl("https://i.imgur.com/xnoBx3p.png");

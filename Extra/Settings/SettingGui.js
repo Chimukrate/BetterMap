@@ -846,15 +846,6 @@ class SettingGui {
             "both": "Hide both messages",
         }, "rewardAnnounceHider", this.currentSettings.rewardAnnounceHider);
 
-        this.addSidebarElement(new ButtonWithArrow().setText("&0Load api key from other mods").addEvent(new SoopyMouseClickEvent().setHandler(() => {
-            findKey(key => {
-                this.setApiKey(key)
-            })
-        })), 0.3, 0.4, 0.075)
-        this.addSidebarElement() // Adds a gap because the button diddnt auto add one
-
-        this.apiKeySetting = this.addHiddenString("Api key", "apiKey", this.currentSettings.apiKey)[0]
-
         this.addToggle("Show dev info", "devInfo", this.currentSettings.devInfo)
 
         // END OF SETTINGS
@@ -905,19 +896,7 @@ class SettingGui {
             Renderer.drawRect(Renderer.color(0, 0, 0, this.backgroundOpacity.get()), 0, 0, Renderer.screen.getWidth(), Renderer.screen.getHeight())
         }
 
-        register("chat", (key, event) => { // Api key detection
-            ChatLib.chat(MESSAGE_PREFIX + "Copied api key!")
-
-            this.setApiKey(key)
-        }).setChatCriteria("&aYour new API key is &r&b${key}&r")
-
         this.generateChangelog()
-    }
-
-    setApiKey(key) {
-        this.apiKeySetting.setText(key)
-
-        this.changed("apiKey", key)
     }
 
     /**
@@ -1240,126 +1219,6 @@ class SettingGui {
 }
 
 export default SettingGui
-
-
-function verifyApiKeySync(key) {
-    if (key) {
-        try {
-            var url = "https://api.hypixel.net/key?key=" + key
-            let data = fetch(url).json()
-
-            return !!data.success
-        } catch (e) {
-            return false
-        }
-    } else {
-        return false
-    }
-}
-
-const JavaString = Java.type("java.lang.String")
-const JavaLong = Java.type("java.lang.Long")
-const Files = Java.type("java.nio.file.Files")
-const Paths = Java.type("java.nio.file.Paths")
-/**
- * NOTE: this will display a notification with key finding information
- */
-function findKey(callback = () => { }) {
-    new Thread(() => {
-
-        //       NEU
-        try {
-            let testKey = JSON.parse(new JavaString(Files.readAllBytes(Paths.get("./config/notenoughupdates/configNew.json")))).apiKey.apiKey
-            if (testKey) {
-                if (verifyApiKeySync(testKey)) {
-                    new Notification("§aSuccess!", ["Found api key in NotEnoughUpdates!"])
-                    callback(testKey)
-                    return;
-                } else {
-                    console.log("[BETERMAP] Found invalid key in NotEnoughUpdates")
-                }
-            }
-        } catch (_) { }
-
-        //       SBE
-        try {
-            let testKey = JSON.parse(new JavaString(Files.readAllBytes(Paths.get("./config/SkyblockExtras.cfg")))).values.apiKey
-            if (testKey) {
-                if (verifyApiKeySync(testKey)) {
-                    new Notification("§aSuccess!", ["Found api key in SkyblockExtras!"])
-                    callback(testKey)
-                    return;
-                } else {
-                    console.log("[BETERMAP] Found invalid key in SkyblockExtras")
-                }
-            }
-        } catch (_) { }
-        //       SKYTILS
-        try {
-            let testKey2 = new JavaString(Files.readAllBytes(Paths.get("./config/skytils/config.toml")))
-            let testKey = undefined
-            testKey2.split("\n").forEach(line => {
-                if (line.startsWith("		hypixel_api_key = \"")) {
-                    testKey = line.split("\"")[1]
-                }
-            })
-            if (testKey) {
-                if (verifyApiKeySync(testKey)) {
-                    new Notification("§aSuccess!", ["Found api key in Skytils!"])
-                    callback(testKey)
-                    return;
-                } else {
-                    console.log("[BETERMAP] Found invalid key in Skytils")
-                }
-            }
-        } catch (_) { }
-
-        //       SOOPYADDONS DATA
-        try {
-            let testKey = FileLib.read("soopyAddonsData", "apikey.txt")
-            if (testKey) {
-                if (verifyApiKeySync(testKey)) {
-                    new Notification("§aSuccess!", ["Found api key in old soopyaddons version!"])
-                    callback(testKey)
-                    return;
-                } else {
-                    console.log("[BETERMAP] Found invalid key in soopyaddonsData")
-                }
-            }
-        } catch (_) { }
-
-        //       SOOPYV2
-        try {
-            let testKey = JSON.parse(FileLib.read("soopyAddonsData", "soopyaddonsbetafeaturesdata.json")).globalSettings.subSettings.api_key.value
-            if (testKey) {
-                if (verifyApiKeySync(testKey)) {
-                    new Notification("§aSuccess!", ["Found api key in old soopyaddons version!"])
-                    callback(testKey)
-                    return;
-                } else {
-                    console.log("[BETERMAP] Found invalid key in soopyaddonsData")
-                }
-            }
-        } catch (_) { }
-
-        //       HypixelApiKeyManager
-        try {
-            let testKey = JSON.parse(FileLib.read("HypixelApiKeyManager", "localdata.json")).key
-            if (testKey) {
-                if (verifyApiKeySync(testKey)) {
-                    new Notification("§aSuccess!", ["Found api key in HypixelApiKeyManager!"])
-                    callback(testKey)
-                    return;
-                } else {
-                    console.log("[BETERMAP] Found invalid key in HypixelApiKeyManager")
-                }
-            }
-        } catch (_) { }
-
-
-        new Notification("§cUnable to find api key", [])
-    }).start()
-}
 
 function testSound270() {
     if (settings.settings.custom270scoreSound !== 'none') World.playSound(settings.settings.custom270scoreSound, 1, 1)

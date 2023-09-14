@@ -31,6 +31,39 @@ let dungeonMapRenderContext = settingsManager.createRenderContext();
 CurrentSettings.renderContext = renderContextManager.getRenderContextData(dungeonMapRenderContext)
 CurrentSettings.settingsManager = settingsManager
 
+let scores = [
+    {
+      rank: 'S+',
+      min: 300,
+      max: 999
+    },
+    {
+      rank: 'S',
+      min: 270,
+      max: 299
+    },
+    {
+      rank: 'A',
+      min: 230,
+      max: 269
+    },
+    {
+      rank: 'B',
+      min: 160,
+      max: 229
+    },
+    {
+      rank: 'C',
+      min: 100,
+      max: 159
+    },
+    {
+      rank: 'D',
+      min: 0,
+      max: 99
+    }
+  ];
+
 require("./Extra/LeapGui/leapGui.js")
 
 register("step", () => {
@@ -129,40 +162,7 @@ register("command", () => {
       ChatLib.chat(MESSAGE_PREFIX + "You must be in a dungeon to run this command.");
       return;
     }
-    const scores = [
-      {
-        rank: 'S+',
-        min: 300,
-        max: 999
-      },
-      {
-        rank: 'S',
-        min: 270,
-        max: 299
-      },
-      {
-        rank: 'A',
-        min: 230,
-        max: 269
-      },
-      {
-        rank: 'B',
-        min: 160,
-        max: 229
-      },
-      {
-        rank: 'C',
-        min: 100,
-        max: 159
-      },
-      {
-        rank: 'D',
-        min: 0,
-        max: 99
-      }
-    ];
-  
-    const currentScore = currentDungeonMap.getScore().total;
+    let currentScore = currentDungeonMap.getScore().total;
     let currentRank = null;
     let nextRank = null;
   
@@ -173,9 +173,9 @@ register("command", () => {
       }
       nextRank = item;
     }
-  
-    const suffix = nextRank != null ? `, next Rank is ${nextRank.rank} in ${nextRank.min - currentScore} Score!` : '!';
-    ChatLib.command('pc' + ` Current Rank is ${currentRank.rank} (${currentScore})` + suffix);
+    
+    let suffix = nextRank != null ? `, next Rank is ${nextRank.rank} in ${nextRank.min - currentScore} Score!` : '!';
+    ChatLib.command('pc' + ` Current Rank is ${currentRank.rank} (${currentScore})${suffix}`);
   }).setName("bscore", true);
 
 register("renderOverlay", () => {
