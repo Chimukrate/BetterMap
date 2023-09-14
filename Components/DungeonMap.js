@@ -148,7 +148,7 @@ class DungeonMap {
                         playerSecrets += Number(p.secretsCollected)
 
                         mess.addTextComponent(new TextComponent("&7 | &6" + p.deaths + "&7 deaths"))
-                        
+
                         if (settings.settings.advancedClearedRooms) {
                             let ignoreList = settings.settings.breakdownIgnoreList.toLowerCase().split(" ")
                             if (p.username != Player.getName() && !ignoreList.includes(p.username.toLowerCase())) {
@@ -1100,7 +1100,7 @@ class DungeonMap {
         this.firstDeath = true;
     
         if (!this.nameToUuid[username.toLowerCase()]) return;
-        let uuid = this.nameToUuid[username.toLowerCase()]?.replace(/-/g, "");
+        let uuid = this.nameToUuid[username.toLowerCase()];
     
         const printSpiritMessage = () => {
           if (this.firstDeathHadSpirit) return ChatLib.chat(`${MESSAGE_PREFIX}${username} ${username == "You" ? "do" : "does"} have a spirit pet.`);
