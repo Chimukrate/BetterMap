@@ -571,6 +571,8 @@ class DungeonMap {
             let p = this.players[this.playersNameToId[playerName]]
             if (!p) return
 
+            if (!this.nameToUuid[playerName.toLowerCase()]) this.nameToUuid[playerName.toLowerCase()] = player.getUUID().toString()
+
             p.setX(player.getX())
             p.setY(player.getZ())
             p.setRotate(player.getYaw() + 180)
