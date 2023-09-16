@@ -47,7 +47,6 @@
  * @property {Boolean} showSecretsBreakdown - add secret breakdown after run
  * @property {String} breakdownIgnoreList - List to ignore Players from advanced breakdown button adding
  * @property {"none"|"Just RARE REWARD"|"Just Dungeon Treasure"|"both"} rewardAnnounceHider - Which DH Rewards to hide
- * @property {String} apiKey - The user's api key, or "" if unknown
  * @property {Boolean} devInfo - Wether to show def info in various places in the map
  * @property {[r:Number, g:Number, b:Number, a:number]} mapBorderColor - The RGBO value of the map border color
  * @property {[r:Number, g:Number, b:Number, a:number]} mapBackgroundColor - The RGBO value of the map backround color
@@ -261,10 +260,6 @@ class RenderContext {
 
     get boxDoors() {
         return this.settings.boxDoors
-    }
-
-    get apiKey() {
-        return this.settings.apiKey
     }
 
     get devInfo() {
@@ -520,7 +515,6 @@ class RenderContext {
         showSecretsBreakdown = false,
         breakdownIgnoreList = "Name1 Name2 Name3 ...",
         rewardAnnounceHider = "none",
-        apiKey = "",
         devInfo = false,
         boxDoors = true,
         mapBorderColor = [0, 0, 0, 255],
@@ -594,7 +588,6 @@ class RenderContext {
             showSecretsBreakdown,
             breakdownIgnoreList,
             rewardAnnounceHider,
-            apiKey,
             devInfo,
             boxDoors,
             mapBorderColor,
